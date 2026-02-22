@@ -12,7 +12,7 @@ public class CustomExtensionTests
         await Tools.WriteTempTemplate("leaf", "I am the {{name}}.", ".mustache");
         await Tools.WriteTempTemplate("branch", "Branch including: {{> leaf }}", ".mustache");
         var templatePath = await Tools.WriteTempTemplate("root", "Root starts: {{> branch }}", ".mustache");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"name", new ("leaf")}
         });

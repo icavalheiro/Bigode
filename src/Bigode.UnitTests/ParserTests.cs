@@ -10,7 +10,7 @@ public class ParserTests
     public async Task Should_ReplaceSimpleVar_NoSpace()
     {
         var templatePath = await Tools.WriteTempTemplate("basic", "Hello {{name}}!");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"name", new ("World")}
         });
@@ -22,7 +22,7 @@ public class ParserTests
     public async Task Should_ReplaceSimpleVar_WithSpace()
     {
         var templatePath = await Tools.WriteTempTemplate("basic2", "Hello {{ name }}!");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"name", new ("World")}
         });
@@ -34,7 +34,7 @@ public class ParserTests
     public async Task Should_IgnoreComments()
     {
         var templatePath = await Tools.WriteTempTemplate("ignore", "Visible {{! This is hidden }} Content");
-        var result = await bigode.Parse(templatePath, []);
+        var result = await bigode.ParseAsync(templatePath, []);
 
         await Assert.That(result).IsEqualTo("Visible  Content");
     }
@@ -43,7 +43,7 @@ public class ParserTests
     public async Task Should_RenderLambdas()
     {
         var templatePath = await Tools.WriteTempTemplate("lambda", "{{#wrapped}}{{name}} is awesome.{{/wrapped}}");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"name", new ("Lambda")},
             {"wrapped", new(async (content) =>
@@ -59,7 +59,7 @@ public class ParserTests
     public async Task Should_RenderLoopSections()
     {
         var templatePath = await Tools.WriteTempTemplate("loop", "Users: {{#users}}{{name}}, {{/users}}");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"users", new ([
                 new RenderModel
@@ -83,7 +83,7 @@ public class ParserTests
             "{{#isAdmin}}Welcome Admin{{/isAdmin}}{{#isGuest}}Welcome Guest{{/isGuest}}"
         );
 
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"isAdmin", new (true)},
             {"isGuest", new (false)},
@@ -99,7 +99,7 @@ public class ParserTests
             "{{^data}}No Data Found{{/data}}"
         );
 
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"data", new (false)},
         });
@@ -114,7 +114,7 @@ public class ParserTests
             "{{#categories}}- {{name}}: {{#items}}{{name}}, {{/items}}{{/categories}}"
         );
 
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"categories", new([
                 new RenderModel {
@@ -150,7 +150,7 @@ public class ParserTests
     {
         var templatePath = await Tools.WriteTempTemplate("missing", "Nothing here: [{{ missing }}]");
 
-        var result = await bigode.Parse(templatePath, []);
+        var result = await bigode.ParseAsync(templatePath, []);
 
         await Assert.That(result).IsEqualTo("Nothing here: []");
     }
@@ -162,7 +162,7 @@ public class ParserTests
 
         var observed = await Assert.ThrowsAsync(async () =>
         {
-            await bigode.Parse(templatePath, []);
+            await bigode.ParseAsync(templatePath, []);
         });
 
         await Assert.That(observed).HasMessageContaining("Mismatched section");
@@ -175,7 +175,7 @@ public class ParserTests
 
         var observed = await Assert.ThrowsAsync(async () =>
         {
-            await bigode.Parse(templatePath, []);
+            await bigode.ParseAsync(templatePath, []);
         });
 
         await Assert.That(observed).HasMessageContaining("Unclosed section");
@@ -186,7 +186,7 @@ public class ParserTests
     {
         await Tools.WriteTempTemplate("user_card", "User: {{ name }}");
         var templatePath = await Tools.WriteTempTemplate("main_template", "<div>{{> user_card }}</div>");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"name", new ("Alice")}
         });
@@ -199,7 +199,7 @@ public class ParserTests
     {
         await Tools.WriteTempTemplate("item", "<li>{{ name }}</li>");
         var templatePath = await Tools.WriteTempTemplate("list_template", "<ul>{{#items}}{{> item }}{{/items}}</ul>");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"items", new ([
                 new RenderModel {
@@ -220,7 +220,7 @@ public class ParserTests
         await Tools.WriteTempTemplate("leaf", "I am the {{name}}.");
         await Tools.WriteTempTemplate("branch", "Branch including: {{> leaf }}");
         var templatePath = await Tools.WriteTempTemplate("root", "Root starts: {{> branch }}");
-        var result = await bigode.Parse(templatePath, new RenderModel
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
         {
             {"name", new ("leaf")}
         });

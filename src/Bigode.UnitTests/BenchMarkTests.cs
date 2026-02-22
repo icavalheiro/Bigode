@@ -21,7 +21,7 @@ public class BenchMarkTests
         var startTime = DateTime.Now;
         for (var i = 0; i < 1_000; i++)
         {
-            await bigode.Parse(templatePath, model);
+            await bigode.ParseAsync(templatePath, model);
         }
         var endTime = DateTime.Now;
         var observed = TimeSpan.FromTicks(startTime.Ticks - endTime.Ticks);

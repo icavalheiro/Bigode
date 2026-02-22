@@ -1,41 +1,29 @@
-var builder = WebApplication.CreateBuilder(args);
+using Bigode.AspNet;
+using Bigode.AspNet.Services;
+using Bigode.Models;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var builder = WebApplication.CreateSlimBuilder(args);
+builder.Services.AddBigode(configure =>
+{
+    configure.ViewsPath = "./Views";
+    configure.ViewFileExtension = "html";
+
+#if DEBUG
+    configure.DisableFileCache = true;
+#endif
+});
 
 var app = builder.Build();
+app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.MapGet("/", async (BigodeService bigodeService) =>
 {
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var page = await bigodeService.RenderViewAsync("Home", []);
+    return await bigodeService.RenderViewResultAsync("Template", new RenderModel
+    {
+        { "title", new ("Bigode Example Page") },
+        { "content", new (page) }
+    });
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

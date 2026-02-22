@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Bigode.Models;
 
@@ -7,9 +8,12 @@ namespace Bigode;
 /// A subset of mustache parser that is AOT compatible.
 /// </summary>
 /// <param name="fileExtension">File extension (without '.')</param>
-public class Bigode(string fileExtension = "html")
+/// <param name="disableCachingFiles">Disabled the default cache of AST tree for files (set it to true if you expect files to change in disk)</param>
+public class Bigode(string fileExtension = "html", bool disableCachingFiles = false)
 {
     private readonly string fileExtension = fileExtension.Replace(".", "");
+
+    private readonly Dictionary<string, List<ASTNode>> cache = [];
 
     /// <summary>
     /// Parses the document at "filePath" with the given "model".
@@ -24,7 +28,7 @@ public class Bigode(string fileExtension = "html")
     /// <returns>A string contained the rendered document</returns>
     /// <exception cref="FileNotFoundException"></exception>
     /// <exception cref="Exception"></exception>
-    public async Task<string> Parse(string filePath, RenderModel model)
+    public async Task<string> ParseAsync(string filePath, RenderModel model)
     {
         if (File.Exists(filePath) is false)
             throw new FileNotFoundException($"Bigode file not found: {filePath}");
@@ -33,12 +37,21 @@ public class Bigode(string fileExtension = "html")
         {
             string templateContent = await File.ReadAllTextAsync(filePath);
 
-            var parser = new Parser(templateContent);
-            var tokens = parser.Tokenize();
-            var ast = Parser.BuildAST(tokens);
+            if (disableCachingFiles || cache.TryGetValue(filePath, out var children) is false)
+            {
+                var parser = new Parser(templateContent);
+                var tokens = parser.Tokenize();
+                var ast = Parser.BuildAST(tokens);
+                children = ast.Children;
+
+                if (disableCachingFiles is false)
+                {
+                    cache.Add(filePath, children);
+                }
+            }
 
             var sb = new StringBuilder();
-            await Render(ast.Children, model, Path.GetDirectoryName(filePath)!, sb);
+            await Render(children, model, Path.GetDirectoryName(filePath)!, sb);
             return sb.ToString();
         }
         catch (Exception e)
@@ -104,7 +117,7 @@ public class Bigode(string fileExtension = "html")
             else if (node.Type == TokenType.PARTIAL)
             {
                 string partialPath = Path.Combine(partialBasePath, $"{node.Value}.{fileExtension}");
-                sb.Append(await Parse(partialPath, context));
+                sb.Append(await ParseAsync(partialPath, context));
             }
         }
     }
