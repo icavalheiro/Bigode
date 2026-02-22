@@ -1,0 +1,6 @@
+@Bigode.AspNet.Example_HostAddress = http://localhost:5265
+
+GET {{Bigode.AspNet.Example_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
