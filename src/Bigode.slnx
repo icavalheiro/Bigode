@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Bigode.UnitTests/Bigode.UnitTests.csproj" />
+  <Project Path="Bigode/Bigode.csproj" />
+</Solution>
