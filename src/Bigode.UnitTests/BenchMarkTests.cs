@@ -1,4 +1,5 @@
 using Bigode.Models;
+using Bigode.UnitTests.Attributes;
 
 namespace Bigode.UnitTests;
 
@@ -6,7 +7,7 @@ public class BenchMarkTests
 {
     private readonly Bigode bigode = new(".html");
 
-    // [Test]
+    [Test, BenchmarkOnly]
     public async Task Should_RenderThousand_InASecond()
     {
         await Tools.WriteTempTemplate("leaf_bench", "I am the {{name}}.");
