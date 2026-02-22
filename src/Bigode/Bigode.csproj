@@ -12,7 +12,6 @@
     <Product>Bigode</Product>
     <Description>A subset of mustache made to be fast and AOT compliant</Description>
     <PackageTags>bigode;mustache;aot;minimal;api;render;view</PackageTags>
-    <PackageLicenseExpression>GPL v2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/icavalheiro/bigode</PackageProjectUrl>
     <RepositoryUrl>https://github.com/icavalheiro/bigode</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
