@@ -1,6 +1,6 @@
 namespace Bigode;
 
-public class Scanner(string input)
+internal class Scanner(string input)
 {
     private readonly string input = input;
     private readonly int length = input.Length;

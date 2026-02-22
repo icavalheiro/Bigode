@@ -1,6 +1,6 @@
 namespace Bigode.Models;
 
-public class ASTNode
+internal class ASTNode
 {
     public TokenType Type { get; set; }
     public required string Value { get; set; }

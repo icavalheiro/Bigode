@@ -1,6 +1,6 @@
 namespace Bigode.Models;
 
-public enum TokenType
+internal enum TokenType
 {
     TEXT,
     VAR,

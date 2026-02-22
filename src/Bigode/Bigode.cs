@@ -4,13 +4,26 @@ using Bigode.Models;
 namespace Bigode;
 
 /// <summary>
-/// subset of mustache parser that is AOT compatible
+/// A subset of mustache parser that is AOT compatible.
 /// </summary>
-/// <param name="fileExtension"></param>
+/// <param name="fileExtension">File extension (without '.')</param>
 public class Bigode(string fileExtension = "html")
 {
     private readonly string fileExtension = fileExtension.Replace(".", "");
 
+    /// <summary>
+    /// Parses the document at "filePath" with the given "model".
+    /// Any partials used by the document must be placed in the same folder, since paths are resolved relative to
+    /// document location, and not relative to Program working dir.
+    /// 
+    /// Bigode Parse only accepts a subset of mustache original features, and model must be explicitly defined 
+    /// with types to support AOT.
+    /// </summary>
+    /// <param name="filePath">Path to bigode/mustache file</param>
+    /// <param name="model">Model to be used during rendering</param>
+    /// <returns>A string contained the rendered document</returns>
+    /// <exception cref="FileNotFoundException"></exception>
+    /// <exception cref="Exception"></exception>
     public async Task<string> Parse(string filePath, RenderModel model)
     {
         if (File.Exists(filePath) is false)

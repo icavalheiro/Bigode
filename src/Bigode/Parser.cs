@@ -2,7 +2,7 @@ using Bigode.Models;
 
 namespace Bigode;
 
-public class Parser(string template)
+internal class Parser(string template)
 {
     private readonly Scanner scanner = new(template);
     private readonly string openTag = "{{";

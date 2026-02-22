@@ -1,6 +1,6 @@
 namespace Bigode.Models;
 
-public class Token
+internal class Token
 {
     public TokenType Type { get; set; }
     public required string Value { get; set; }
