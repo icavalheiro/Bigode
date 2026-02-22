@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Bigode.AspNet\Bigode.AspNet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Views\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
