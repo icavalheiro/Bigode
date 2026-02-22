@@ -19,13 +19,19 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore src/Bigode/Bigode.csproj
+        run: dotnet restore src/Bigode.slnx
 
-      - name: Build
+      - name: Build Main
         run: dotnet build src/Bigode/Bigode.csproj --configuration Release --no-restore
 
-      - name: Pack
+      # - name: Build AspNet
+      #   run: dotnet build src/Bigode.AspNet/Bigode.AspNet.csproj --configuration Release --no-restore
+
+      - name: Pack Main
         run: dotnet pack src/Bigode/Bigode.csproj --configuration Release --no-build --output ./dist
+
+      # - name: Pack AspNet
+      #   run: dotnet pack src/Bigode.AspNet/Bigode.AspNet.csproj --configuration Release --no-build --output ./dist
 
       - name: Push to NuGet
         run: dotnet nuget push "./dist/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate

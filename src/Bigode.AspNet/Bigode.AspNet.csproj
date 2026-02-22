@@ -4,9 +4,29 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Bigode.AspNet</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Ivan Cavalheiro</Authors>
+    <Company>C8O.dev.br</Company>
+    <Product>Bigode.AspNet</Product>
+    <Description>Bigode extensions for ASP.NET integration</Description>
+    <PackageTags>bigode;mustache;aot;minimal;api;render;view;asp</PackageTags>
+    <PackageProjectUrl>https://github.com/icavalheiro/bigode</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/icavalheiro/bigode</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>bigode.png</PackageIcon>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Bigode\Bigode.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bigode.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 </Project>
