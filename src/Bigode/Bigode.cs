@@ -1,12 +1,10 @@
 using System.Text;
 using Bigode.Models;
 
-using Microsoft.VisualBasic;
-
 namespace Bigode;
 
 /// <summary>
-/// smaller mustache parser that is AOT compatible
+/// subset of mustache parser that is AOT compatible
 /// </summary>
 /// <param name="fileExtension"></param>
 public class Bigode(string fileExtension = "html")
@@ -24,7 +22,7 @@ public class Bigode(string fileExtension = "html")
 
             var parser = new Parser(templateContent);
             var tokens = parser.Tokenize();
-            var ast = parser.BuildAST(tokens);
+            var ast = Parser.BuildAST(tokens);
 
             var sb = new StringBuilder();
             await Render(ast.Children, model, Path.GetDirectoryName(filePath)!, sb);

@@ -78,7 +78,7 @@ public class Parser(string template)
         });
     }
 
-    public ASTNode BuildAST(List<Token> tokens)
+    public static ASTNode BuildAST(List<Token> tokens)
     {
         var root = new ASTNode
         {

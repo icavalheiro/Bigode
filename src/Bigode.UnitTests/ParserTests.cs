@@ -180,4 +180,51 @@ public class ParserTests
 
         await Assert.That(observed).HasMessageContaining("Unclosed section");
     }
+
+    [Test]
+    public async Task Should_RenderPartials()
+    {
+        await Tools.WriteTempTemplate("user_card", "User: {{ name }}");
+        var templatePath = await Tools.WriteTempTemplate("main_template", "<div>{{> user_card }}</div>");
+        var result = await bigode.Parse(templatePath, new RenderModel
+        {
+            {"name", new ("Alice")}
+        });
+
+        await Assert.That(result).IsEqualTo("<div>User: Alice</div>");
+    }
+
+    [Test]
+    public async Task Should_RenderLoopPartials()
+    {
+        await Tools.WriteTempTemplate("item", "<li>{{ name }}</li>");
+        var templatePath = await Tools.WriteTempTemplate("list_template", "<ul>{{#items}}{{> item }}{{/items}}</ul>");
+        var result = await bigode.Parse(templatePath, new RenderModel
+        {
+            {"items", new ([
+                new RenderModel {
+                    {"name", new("Apples")},
+                },
+                new RenderModel {
+                    {"name", new("Bananas")},
+                },
+            ])}
+        });
+
+        await Assert.That(result).IsEqualTo("<ul><li>Apples</li><li>Bananas</li></ul>");
+    }
+
+    [Test]
+    public async Task Should_RenderNestedPartials()
+    {
+        await Tools.WriteTempTemplate("leaf", "I am the {{name}}.");
+        await Tools.WriteTempTemplate("branch", "Branch including: {{> leaf }}");
+        var templatePath = await Tools.WriteTempTemplate("root", "Root starts: {{> branch }}");
+        var result = await bigode.Parse(templatePath, new RenderModel
+        {
+            {"name", new ("leaf")}
+        });
+
+        await Assert.That(result).IsEqualTo("Root starts: Branch including: I am the leaf.");
+    }
 }
