@@ -8,7 +8,7 @@ public class BigodeServiceOptions
     /// <summary>
     /// Default path where views and partials are located 
     /// </summary>
-    public string ViewsPath { get; set; } = "/Views";
+    public string ViewsPath { get; set; } = "./Views";
 
     /// <summary>
     /// Disables the file caching, set it to true if you expect the view files to change
