@@ -109,6 +109,7 @@ Below is a comprehensive list of supported tags and scenarios, documented via ex
 Replaces `{{name}}` with the provided string value.
 
 Compatibility note: unlike default Mustache behavior, Bigode does not HTML-escape `{{name}}` output by default.
+Compatibility note: variable interpolation only accepts string values in Bigode. Lambdas are supported in section tags (e.g. `{{#wrapped}}...{{/wrapped}}`), not in `{{name}}` interpolation.
 
 ```cs
 var templatePath = "basic.html"; // Content: "Hello {{name}}!"
@@ -149,6 +150,9 @@ var result = await bigode.ParseAsync(templatePath, model);
 ### 3. Lambdas / Delegates
 
 You can pass functions (lambdas) to manipulate the inner content of a section.
+
+Compatibility note: Bigode lambda sections receive the already rendered inner content.
+Unlike standard Mustache lambda behavior, Bigode does not pass the raw inner template text for a second render pass.
 
 ```cs
 var templatePath = "lambda.html"; // Content: "{{#wrapped}}Inner Content{{/wrapped}}"
