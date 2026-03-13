@@ -108,12 +108,30 @@ Below is a comprehensive list of supported tags and scenarios, documented via ex
 
 Replaces `{{name}}` with the provided string value.
 
+Compatibility note: unlike default Mustache behavior, Bigode does not HTML-escape `{{name}}` output by default.
+
 ```cs
 var templatePath = "basic.html"; // Content: "Hello {{name}}!"
 var model = new RenderModel { { "name", new("World") } };
 
 var result = await bigode.ParseAsync(templatePath, model);
 // Output: "Hello World!"
+```
+
+### 1.1 Escaped Variables (`{{&name}}`)
+
+Use `{{&name}}` when you need escaped output.
+
+`{{&name}}` applies:
+- HTML escaping (e.g. `<` becomes `&lt;`)
+- Bigode tag escaping for curly braces (e.g. `{{name}}` becomes `&#123;&#123;name&#125;&#125;`)
+
+```cs
+var templatePath = "escaped.html"; // Content: "Content: {{&content}}"
+var model = new RenderModel { { "content", new("<b>{{name}}</b>") } };
+
+var result = await bigode.ParseAsync(templatePath, model);
+// Output: "Content: &lt;b&gt;&#123;&#123;name&#125;&#125;&lt;/b&gt;"
 ```
 
 ### 2. Comments

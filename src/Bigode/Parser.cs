@@ -69,6 +69,11 @@ internal class Parser(string template)
             type = TokenType.PARTIAL;
             val = trimmed[1..].Trim();
         }
+        else if (firstChar == '&')
+        {
+            type = TokenType.ESC_VAR;
+            val = trimmed[1..].Trim();
+        }
 
         tokens.Add(new Token
         {
@@ -92,7 +97,7 @@ internal class Parser(string template)
         {
             var currentParent = stack.Peek();
 
-            if (token.Type == TokenType.TEXT || token.Type == TokenType.VAR || token.Type == TokenType.PARTIAL)
+            if (token.Type == TokenType.TEXT || token.Type == TokenType.VAR || token.Type == TokenType.ESC_VAR || token.Type == TokenType.PARTIAL)
             {
                 currentParent.Children.Add(new ASTNode
                 {

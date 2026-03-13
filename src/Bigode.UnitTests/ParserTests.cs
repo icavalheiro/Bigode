@@ -31,6 +31,54 @@ public class ParserTests
     }
 
     [Test]
+    public async Task Should_NotEscapeHtml_ByDefault_InVariables()
+    {
+        var templatePath = await Tools.WriteTempTemplate("basic_html_raw", "Hello {{name}}!");
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
+        {
+            {"name", new ("<b>World</b>")}
+        });
+
+        await Assert.That(result).IsEqualTo("Hello <b>World</b>!");
+    }
+
+    [Test]
+    public async Task Should_EscapeHtml_WithAmpersandTag()
+    {
+        var templatePath = await Tools.WriteTempTemplate("escaped_html_amp", "Hello {{&name}}!");
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
+        {
+            {"name", new ("<b>World</b>")}
+        });
+
+        await Assert.That(result).IsEqualTo("Hello &lt;b&gt;World&lt;/b&gt;!");
+    }
+
+    [Test]
+    public async Task Should_EscapeBigodeTags_WithAmpersandTag()
+    {
+        var templatePath = await Tools.WriteTempTemplate("escaped_bigode_amp", "Template: {{&content}}");
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
+        {
+            {"content", new ("{{name}}")}
+        });
+
+        await Assert.That(result).IsEqualTo("Template: &#123;&#123;name&#125;&#125;");
+    }
+
+    [Test]
+    public async Task Should_EscapeHtmlAndBigodeTags_WithAmpersandTag()
+    {
+        var templatePath = await Tools.WriteTempTemplate("escaped_html_bigode_amp", "Content: {{&content}}");
+        var result = await bigode.ParseAsync(templatePath, new RenderModel
+        {
+            {"content", new ("<b>{{name}}</b>")}
+        });
+
+        await Assert.That(result).IsEqualTo("Content: &lt;b&gt;&#123;&#123;name&#125;&#125;&lt;/b&gt;");
+    }
+
+    [Test]
     public async Task Should_IgnoreComments()
     {
         var templatePath = await Tools.WriteTempTemplate("ignore", "Visible {{! This is hidden }} Content");

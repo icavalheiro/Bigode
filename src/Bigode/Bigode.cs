@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using Bigode.Models;
 
@@ -78,6 +79,16 @@ public class Bigode(string fileExtension = "html", bool disableCachingFiles = fa
                     sb.Append(nodeVal.GetStringValue());
                 }
             }
+            else if (node.Type == TokenType.ESC_VAR)
+            {
+                if (context.TryGetValue(node.Value, out var nodeVal))
+                {
+                    if (nodeVal.IsString is false)
+                        throw new Exception($"Bigode Render Error: Section {node.Value} invalid model");
+
+                    sb.Append(EscapeForEscapedVar(nodeVal.GetStringValue()));
+                }
+            }
             else if (node.Type == TokenType.SECTION_START)
             {
                 var nodeVal = context[node.Value];
@@ -120,5 +131,14 @@ public class Bigode(string fileExtension = "html", bool disableCachingFiles = fa
                 sb.Append(await ParseAsync(partialPath, context));
             }
         }
+    }
+
+    private static string EscapeForEscapedVar(string value)
+    {
+        string escaped = WebUtility.HtmlEncode(value)
+            .Replace("{", "&#123;")
+            .Replace("}", "&#125;");
+
+        return escaped;
     }
 }
