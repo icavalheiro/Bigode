@@ -108,8 +108,7 @@ Below is a comprehensive list of supported tags and scenarios, documented via ex
 
 Replaces `{{name}}` with the provided string value.
 
-Compatibility note: unlike default Mustache behavior, Bigode does not HTML-escape `{{name}}` output by default.
-Compatibility note: variable interpolation only accepts string values in Bigode. Lambdas are supported in section tags (e.g. `{{#wrapped}}...{{/wrapped}}`), not in `{{name}}` interpolation.
+Compatibility note: unlike default Mustache behavior, Bigode does not HTML-escape `{{name}}` output by default, and also variable interpolation only accepts string values in Bigode. Lambdas are supported in section tags (e.g. `{{#wrapped}}...{{/wrapped}}`), not in `{{name}}` interpolation.
 
 ```cs
 var templatePath = "basic.html"; // Content: "Hello {{name}}!"
