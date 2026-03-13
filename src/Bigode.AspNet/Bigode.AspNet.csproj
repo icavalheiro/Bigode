@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Bigode.AspNet</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Ivan Cavalheiro</Authors>
     <Company>C8O.dev.br</Company>
     <Product>Bigode.AspNet</Product>
@@ -15,6 +15,7 @@
     <RepositoryUrl>https://github.com/icavalheiro/bigode</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>bigode.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
@@ -31,6 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\.github\agents\bigode-aspnet-package-user.agent.md" Pack="True" PackagePath="\.github\agents\" Link=".github\agents\bigode-aspnet-package-user.agent.md" />
+    <None Include="..\..\README.md" Pack="True" PackagePath="\" Link="README.md" />
     <None Include="bigode.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 </Project>
