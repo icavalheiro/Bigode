@@ -126,6 +126,8 @@ Use `{{&name}}` when you need escaped output.
 - HTML escaping (e.g. `<` becomes `&lt;`)
 - Bigode tag escaping for curly braces (e.g. `{{name}}` becomes `&#123;&#123;name&#125;&#125;`)
 
+This is usefull if you need to render user-generated content.
+
 ```cs
 var templatePath = "escaped.html"; // Content: "Content: {{&content}}"
 var model = new RenderModel { { "content", new("<b>{{name}}</b>") } };
